@@ -1,0 +1,26 @@
+# --- Secretos y configuración local (NUNCA al repo) ---
+.env
+*.env
+!.env.example
+.streamlit/secrets.toml
+client_secret*.json
+credentials*.json
+token*.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# --- Editores / sistema ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Salidas temporales de pruebas (las evidencias finales sí van) ---
+*.tmp
+comprobantes_tmp/
