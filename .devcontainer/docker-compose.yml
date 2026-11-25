@@ -1,0 +1,67 @@
+# Grupo04_Reservas — entorno de ejecución (Codespaces)
+# Dos contenedores en la misma red de Compose:
+#   dev  -> donde trabajas (terminal de VS Code) y corre Streamlit (:8501)
+#   n8n  -> agente, webhook y credenciales (:5678)
+# Dentro de la red, cada servicio se alcanza por su NOMBRE:
+#   desde dev, n8n está en http://n8n:5678  (NO en localhost:5678)
+name: reservas-g04
+
+services:
+  dev:
+    image: mcr.microsoft.com/devcontainers/python:3.11-bookworm
+    volumes:
+      # El repo dentro del contenedor de desarrollo. La ruta debe coincidir
+      # con "workspaceFolder" de devcontainer.json.
+      # (El socket de Docker lo monta el feature docker-outside-of-docker;
+      # no agregar /var/run/docker.sock aquí: produce "duplicate mount").
+      - ..:/workspaces/Proyecto-Final-Reservas:cached
+    command: sleep infinity
+    working_dir: /workspaces/Proyecto-Final-Reservas
+    environment:
+      # Contrato interno: Streamlit llama a n8n por el nombre del servicio.
+      # Se puede sobrescribir exportando N8N_CHAT_URL antes del up.
+      - N8N_CHAT_URL=${N8N_CHAT_URL:-http://n8n:5678/webhook/agente-reservas}
+      - TZ=America/Bogota
+    depends_on:
+      - n8n
+
+  n8n:
+    # Versión fijada: un "pull" antes de la demo no debe cambiar los nodos.
+    # Para actualizar: exporta N8N_VERSION=<nueva> y recrea el contenedor.
+    image: n8nio/n8n:${N8N_VERSION:-2.47.3}
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      # URLs públicas autoconstruidas con el nombre del Codespace (evita el
+      # banner "Connection lost" y deja bien la OAuth Redirect URL de Google).
+      # Fuera de Codespaces: exporta N8N_EDITOR_BASE_URL y N8N_WEBHOOK_URL
+      # (ej. http://localhost:5678/) antes del up.
+      - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL:-https://${CODESPACE_NAME}-5678.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}/}
+      - N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL:-https://${CODESPACE_NAME}-5678.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}/}
+      - N8N_PUSH_BACKEND=sse
+      - N8N_SECURE_COOKIE=false
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      # Zona horaria: sin esto los eventos de Calendar salen 5 h corridos.
+      - GENERIC_TIMEZONE=America/Bogota
+      - TZ=America/Bogota
+      # ID del calendario "Reservas Restaurante" (no es secreto). Se define
+      # como secreto de Codespaces o exportándolo antes del up; en n8n se usa
+      # con la expresión {{ $env.RESERVAS_CALENDAR_ID }}.
+      - RESERVAS_CALENDAR_ID=${RESERVAS_CALENDAR_ID:-}
+      # Permite leer $env en expresiones (n8n 2.x lo bloquea por defecto).
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+    volumes:
+      # Workflows, credenciales y usuario de n8n. Se conserva al detener o
+      # reconstruir el Codespace; se pierde con "docker compose down -v" o
+      # al borrar el Codespace.
+      - n8n_data:/home/node/.n8n
+      # Repo en solo lectura dentro de n8n: permite importar por consola
+      #   docker compose exec n8n n8n import:workflow --input=/home/node/files/n8n/workflow.json
+      - ..:/home/node/files:ro
+
+volumes:
+  n8n_data:

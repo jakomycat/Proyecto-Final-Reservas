@@ -1,0 +1,25 @@
+{
+  "name": "Prueba de red (ping) - Grupo04",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ping",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "3b0d6a52-8c1e-4f2a-9a57-1f0c2d4e6b71",
+      "name": "Webhook ping",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "8e4f1c2a-6d3b-4b9e-a1f7-2c5d9e0b3a44"
+    }
+  ],
+  "connections": {},
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

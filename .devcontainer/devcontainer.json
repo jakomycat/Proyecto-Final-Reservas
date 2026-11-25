@@ -1,0 +1,22 @@
+{
+  "name": "Grupo04 Reservas: n8n + Streamlit",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "dev",
+  "runServices": ["dev", "n8n"],
+  "workspaceFolder": "/workspaces/Proyecto-Final-Reservas",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "forwardPorts": [5678, 8501],
+  "portsAttributes": {
+    "5678": { "label": "n8n", "onAutoForward": "notify" },
+    "8501": { "label": "streamlit", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "pip install -q -r app/requirements.txt && echo 'Codespace listo. Abre n8n desde PORTS (5678) y ejecuta: bash scripts/verificar_entorno.sh'",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  },
+  "remoteUser": "vscode"
+}
