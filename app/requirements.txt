@@ -1,0 +1,6 @@
+# Base acordada. El Integrante 3 puede añadir lo que necesite su app.py
+# (el Codespace las instala al crearse: postCreateCommand).
+streamlit
+requests
+fpdf2
+python-dotenv

@@ -1,0 +1,15 @@
+# Streamlit lee este archivo cuando se ejecuta desde la raíz del repo:
+#   streamlit run app/app.py
+[server]
+port = 8501
+# Escuchar en todas las interfaces del contenedor para que el reenvío de
+# puertos de Codespaces lo encuentre.
+address = "0.0.0.0"
+headless = true
+# Si st.file_uploader falla con "403" detrás del proxy de Codespaces,
+# descomentar estas dos líneas:
+# enableXsrfProtection = false
+# enableCORS = false
+
+[browser]
+gatherUsageStats = false
