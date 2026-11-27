@@ -3,8 +3,9 @@
 Procesamiento de Lenguaje Natural · Universidad Nacional de Colombia, sede Manizales.
 
 Un agente en **n8n** atiende reservas en lenguaje natural: consulta la disponibilidad real de mesas en
-**Google Sheets**, y solo con confirmación explícita registra la reserva en Sheets y crea su evento en
-**Google Calendar**. La interfaz es un cliente delgado en **Streamlit** construido con Spec-Driven Development.
+**Google Sheets** y propone una reserva. Solo con confirmación explícita, una rama sin LLM vuelve a verificar,
+registra la reserva en Sheets, crea su evento en **Google Calendar** y envía la confirmación por **Gmail**.
+La interfaz es un cliente delgado en **Streamlit** construido con Spec-Driven Development.
 
 ## Arquitectura
 
@@ -13,10 +14,11 @@ flowchart LR
     B[Navegador] -- "https :8501 (PORTS)" --> S
     B -- "https :5678 (PORTS)" --> N
     subgraph CS["Codespace · red de Docker Compose"]
-        S["dev<br/>Streamlit app/app.py"] -- "POST http://n8n:5678/webhook/agente-reservas" --> N["n8n<br/>Webhook → AI Agent T=0<br/>memoria por sessionId"]
+        S["dev<br/>Streamlit app/app.py"] -- "POST http://n8n:5678/webhook/agente-reservas" --> N["n8n<br/>conversar: AI Agent T=0 (solo lee)<br/>confirmar: rama sin LLM (escribe)"]
     end
     N --> GS[(Google Sheets<br/>Mesas · Reservas)]
     N --> GC[Google Calendar<br/>Reservas Restaurante]
+    N --> GM[Gmail<br/>confirmación]
     N --> OR[OpenRouter<br/>modelo de lenguaje]
 ```
 
@@ -29,7 +31,7 @@ Regla de oro: el **navegador** usa las URL `https` de la pestaña PORTS; el **c�
    dependencias de `app/requirements.txt` y quedan arriba los contenedores `dev` y `n8n`.
 2. **Abrir n8n** desde la pestaña *PORTS* (puerto 5678, URL `https`) y crear el usuario local.
 3. **Credenciales en n8n** (cada n8n crea las suyas; nunca van al repo):
-   OpenRouter, Google Sheets OAuth2 API y Google Calendar OAuth2 API.
+   OpenRouter, Google Sheets OAuth2 API, Google Calendar OAuth2 API y Gmail OAuth2.
    Pasos y errores típicos: [`skills/google-calendar-n8n/SKILL.md`](skills/google-calendar-n8n/SKILL.md).
 4. **Importar** `n8n/workflow.json`, reasignar credenciales en cada nodo y *Publish* ([`n8n/README.md`](n8n/README.md)).
 5. **Verificar:**
@@ -37,6 +39,8 @@ Regla de oro: el **navegador** usa las URL `https` de la pestaña PORTS; el **c�
    bash scripts/verificar_entorno.sh
    python scripts/probar_contrato.py --memoria
    ```
+   El ciclo completo (consulta → propuesta → intento sin confirmar → confirmación) está en
+   [`n8n/README.md`](n8n/README.md#prueba-punta-a-punta).
 6. **Interfaz:** `streamlit run app/app.py` y abrir el puerto 8501 desde *PORTS*.
 
 Variables: ver [`app/.env.example`](app/.env.example). El ID del calendario se define como secreto de Codespaces
