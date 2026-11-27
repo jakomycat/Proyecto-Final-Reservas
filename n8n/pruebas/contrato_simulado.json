@@ -1,0 +1,61 @@
+{
+  "name": "Contrato simulado v2 (sin escritura) - Grupo04",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agente-reservas",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "5f2c7e10-3a4b-4c8d-9e21-6b7a8c9d0e12",
+      "name": "Webhook contrato",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "c41e9a7d-2b6f-4e3a-8d15-7f0a1b2c3d4e"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.body.confirmado === true\n  ? ($json.body.propuesta\n      ? { output: 'SIMULADO: reserva confirmada (no se escribio nada).', reserva: Object.assign({ codigo: 'RES-SIMULADA', estado: 'Confirmada', calendar_event_id: 'evento-simulado', estado_calendar: 'Creado', estado_correo: 'Enviado' }, $json.body.propuesta) }\n      : { output: 'No se recibieron los datos de la reserva.' })\n  : { output: 'SIMULADO: ' + $json.body.chatInput + ' -> te propongo la mesa 1. ¿Confirmas?', propuesta: { nombre: 'Cliente Prueba', correo: 'prueba@ejemplo.com', personas: 2, fecha: '2026-12-04', hora: '19:00', numero_mesa: 1 }, evidencia: [ { herramienta: 'Consultar_Mesas', entrada: null, resultado: [ { numero_mesa: 1, capacidad: 2, estado_mesa: 'Disponible' } ] }, { herramienta: 'Consultar_Reservas', entrada: { fecha: '2026-12-04' }, resultado: [] } ] }) }}",
+        "options": {}
+      },
+      "id": "9a8b7c6d-5e4f-4a3b-2c1d-0e9f8a7b6c5d",
+      "name": "Responder contrato v2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [260, 0]
+    },
+    {
+      "parameters": {
+        "content": "## Contrato simulado v2\nResponde con el formato real del agente SIN tocar Sheets, Calendar ni Gmail.\nUsa la misma ruta que el workflow real (agente-reservas): **nunca deben estar activos los dos a la vez**.",
+        "height": 180,
+        "width": 420
+      },
+      "id": "1d2e3f4a-5b6c-4d7e-8f90-a1b2c3d4e5f6",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-40, -220]
+    }
+  ],
+  "connections": {
+    "Webhook contrato": {
+      "main": [
+        [
+          {
+            "node": "Responder contrato v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

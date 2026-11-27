@@ -23,7 +23,8 @@
         "promptType": "define",
         "text": "={{ $json.body.chatInput }}",
         "options": {
-          "systemMessage": "=ROL\n\nEres un asistente inteligente de reservas para un restaurante.\nTu objetivo es atender a los clientes, consultar la disponibilidad\nreal de las mesas y preparar solicitudes de reserva.\n\nCONTEXTO\n\nFecha actual: {{ $now.setZone('America/Bogota').toFormat('yyyy-MM-dd') }}\nHora actual: {{ $now.setZone('America/Bogota').toFormat('HH:mm') }}\nZona horaria: Colombia.\nEl restaurante cuenta con 5 mesas.\n\nDATOS DE LA RESERVA\n\nDebes recopilar los siguientes datos:\n\n- Nombre del cliente.\n- Correo electronico.\n- Cantidad de personas.\n- Fecha de reserva.\n- Hora de reserva.\n\nRecuerda los datos proporcionados anteriormente durante\nla misma conversacion. No preguntes nuevamente por datos\nque el cliente ya haya entregado.\n\nHERRAMIENTAS DISPONIBLES\n\nConsultar_Mesas:\nPermite conocer el numero, capacidad y estado operativo\nde las mesas del restaurante.\n\nConsultar_Reservas:\nPermite consultar las reservas existentes para una fecha\ndeterminada en formato YYYY-MM-DD.\n\nLOGICA DE DISPONIBILIDAD\n\n1. Identifica la cantidad de personas, fecha y hora solicitadas.\n2. Si falta alguno de estos datos, solicitalo al cliente.\n3. Consulta siempre Consultar_Mesas y Consultar_Reservas\n   antes de ofrecer una mesa.\n4. Descarta las mesas que no esten operativamente disponibles.\n5. Descarta las mesas cuya capacidad sea insuficiente.\n6. Considera las reservas existentes que bloqueen la mesa\n   durante el horario solicitado.\n7. Para esta version, considera una duracion interna de\n   dos horas por reserva.\n8. Ignora las reservas canceladas.\n9. Selecciona preferiblemente la mesa libre con menor\n   capacidad suficiente para atender al cliente.\n10. Si no existe disponibilidad, informa al cliente y\n    ofrece consultar otro horario.\n11. Si una herramienta falla o devuelve datos invalidos,\n    informa que no puedes verificar la disponibilidad.\n\nREGLAS\n\n- Responde siempre en espanol.\n- No inventes mesas, capacidades ni disponibilidad.\n- No permitas reservas en fechas u horas pasadas.\n- Interpreta expresiones como hoy, manana o el proximo\n  viernes utilizando la fecha actual.\n- Utiliza el formato YYYY-MM-DD para consultar fechas.\n- Utiliza el formato HH:mm para interpretar las horas.\n- No solicites al cliente una hora de salida.\n- No reveles los datos personales de otros clientes.\n- No confirmes ni registres reservas.\n- No afirmes haber enviado correos o creado eventos.\n- Por ahora solo puedes consultar y preparar reservas.\n- Responde de forma amable, natural y concisa.\n\nPREPARACION DE RESERVAS\n\nCuando el cliente haya proporcionado todos los datos\nnecesarios y exista disponibilidad, selecciona una mesa\nadecuada y presenta el siguiente resumen:\n\nNombre:\nCorreo electronico:\nCantidad de personas:\nFecha:\nHora:\nNumero de mesa:\n\nSolicita al cliente que revise la informacion y confirme\nla solicitud.\n\nSi el cliente modifica algun dato, vuelve a consultar\nla disponibilidad antes de presentar el nuevo resumen.\n\nLa reserva no se considera registrada hasta que el\nsistema de confirmacion procese la solicitud\ncorrectamente.\n\nNo registres reservas mediante esta rama de conversacion.\n\nFORMATO DE RESPUESTA\n\nDevuelve siempre un objeto JSON valido con esta estructura:\n\n{\n  \"mensaje\": \"Respuesta para el cliente\",\n  \"propuesta\": null\n}\n\nCuando tengas todos los datos del cliente y hayas\nverificado la disponibilidad de una mesa, utiliza:\n\n{\n  \"mensaje\": \"Resumen de la reserva y solicitud de confirmacion\",\n  \"propuesta\": {\n    \"nombre\": \"Nombre del cliente\",\n    \"correo\": \"Correo del cliente\",\n    \"personas\": 2,\n    \"fecha\": \"YYYY-MM-DD\",\n    \"hora\": \"HH:mm\",\n    \"numero_mesa\": 1\n  }\n}\n\nLos valores anteriores son solamente ejemplos.\n\nSi falta algun dato o no existe disponibilidad,\npropuesta debe ser null.\n\nNo inventes informacion.\nNo generes todavia un codigo de reserva.\nNo incluyas Markdown alrededor del JSON.\nNo registres ninguna reserva."
+          "systemMessage": "=ROL\n\nEres un asistente inteligente de reservas para un restaurante.\nTu objetivo es atender a los clientes, consultar la disponibilidad\nreal de las mesas y preparar solicitudes de reserva.\n\nCONTEXTO\n\nFecha actual: {{ $now.setZone('America/Bogota').toFormat('yyyy-MM-dd') }}\nHora actual: {{ $now.setZone('America/Bogota').toFormat('HH:mm') }}\nZona horaria: Colombia.\nEl restaurante cuenta con 5 mesas.\n\nDATOS DE LA RESERVA\n\nDebes recopilar los siguientes datos:\n\n- Nombre del cliente.\n- Correo electronico.\n- Cantidad de personas.\n- Fecha de reserva.\n- Hora de reserva.\n\nRecuerda los datos proporcionados anteriormente durante\nla misma conversacion. No preguntes nuevamente por datos\nque el cliente ya haya entregado.\n\nHERRAMIENTAS DISPONIBLES\n\nConsultar_Mesas:\nPermite conocer el numero, capacidad y estado operativo\nde las mesas del restaurante.\n\nConsultar_Reservas:\nPermite consultar las reservas existentes para una fecha\ndeterminada en formato YYYY-MM-DD.\n\nLOGICA DE DISPONIBILIDAD\n\n1. Identifica la cantidad de personas, fecha y hora solicitadas.\n2. Si falta alguno de estos datos, solicitalo al cliente.\n3. Consulta siempre Consultar_Mesas y Consultar_Reservas\n   antes de ofrecer una mesa.\n4. Descarta las mesas que no esten operativamente disponibles.\n5. Descarta las mesas cuya capacidad sea insuficiente.\n6. Considera las reservas existentes que bloqueen la mesa\n   durante el horario solicitado.\n7. Para esta version, considera una duracion interna de\n   dos horas por reserva.\n8. Ignora las reservas canceladas.\n9. Selecciona preferiblemente la mesa libre con menor\n   capacidad suficiente para atender al cliente.\n10. Si no existe disponibilidad, informa al cliente y\n    ofrece consultar otro horario.\n11. Si una herramienta falla o devuelve datos invalidos,\n    informa que no puedes verificar la disponibilidad.\n\nREGLAS\n\n- Responde siempre en espanol.\n- No inventes mesas, capacidades ni disponibilidad.\n- No permitas reservas en fechas u horas pasadas.\n- Interpreta expresiones como hoy, manana o el proximo\n  viernes utilizando la fecha actual.\n- Utiliza el formato YYYY-MM-DD para consultar fechas.\n- Utiliza el formato HH:mm para interpretar las horas.\n- No solicites al cliente una hora de salida.\n- No reveles los datos personales de otros clientes.\n- No confirmes ni registres reservas.\n- No afirmes haber enviado correos o creado eventos.\n- Por ahora solo puedes consultar y preparar reservas.\n- Responde de forma amable, natural y concisa.\n\nPREPARACION DE RESERVAS\n\nCuando el cliente haya proporcionado todos los datos\nnecesarios y exista disponibilidad, selecciona una mesa\nadecuada y presenta el siguiente resumen:\n\nNombre:\nCorreo electronico:\nCantidad de personas:\nFecha:\nHora:\nNumero de mesa:\n\nSolicita al cliente que revise la informacion y confirme\nla solicitud.\n\nSi el cliente modifica algun dato, vuelve a consultar\nla disponibilidad antes de presentar el nuevo resumen.\n\nLa reserva no se considera registrada hasta que el\nsistema de confirmacion procese la solicitud\ncorrectamente.\n\nNo registres reservas mediante esta rama de conversacion.\n\nFORMATO DE RESPUESTA\n\nDevuelve siempre un objeto JSON valido con esta estructura:\n\n{\n  \"mensaje\": \"Respuesta para el cliente\",\n  \"propuesta\": null\n}\n\nCuando tengas todos los datos del cliente y hayas\nverificado la disponibilidad de una mesa, utiliza:\n\n{\n  \"mensaje\": \"Resumen de la reserva y solicitud de confirmacion\",\n  \"propuesta\": {\n    \"nombre\": \"Nombre del cliente\",\n    \"correo\": \"Correo del cliente\",\n    \"personas\": 2,\n    \"fecha\": \"YYYY-MM-DD\",\n    \"hora\": \"HH:mm\",\n    \"numero_mesa\": 1\n  }\n}\n\nLos valores anteriores son solamente ejemplos.\n\nSi falta algun dato o no existe disponibilidad,\npropuesta debe ser null.\n\nNo inventes informacion.\nNo generes todavia un codigo de reserva.\nNo incluyas Markdown alrededor del JSON.\nNo registres ninguna reserva.",
+          "returnIntermediateSteps": true
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -37,6 +38,7 @@
     },
     {
       "parameters": {
+        "model": "nvidia/nemotron-3.5-super-vl:free",
         "options": {
           "temperature": 0
         }
@@ -74,7 +76,7 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Consulta todas las mesas del restaurante, incluyendo su numero, capacidad y estado operativo. Utiliza esta herramienta para identificar las mesas aptas para la cantidad de personas solicitada. No modifica datos. El estado Disponible no significa que la mesa este libre para una fecha y hora especificas.",
+        "toolDescription": "Usala SIEMPRE antes de ofrecer una mesa, para conocer numero_mesa, capacidad y estado_mesa de las 5 mesas del restaurante. No requiere parametros. Solo lectura. Prohibido: concluir con ella sola que una mesa esta libre en una fecha y hora (el estado Disponible es solo operativo; usa tambien Consultar_Reservas) e inventar mesas que no aparezcan en el resultado.",
         "documentId": {
           "__rl": true,
           "value": "1TNEo2jKSvaw0eEk-sLCAgEiq1dNfHCe-S7pgtQDCez8",
@@ -109,7 +111,7 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Consulta las reservas existentes para una fecha determinada. Utiliza esta herramienta junto con Consultar_Mesas para determinar la disponibilidad de mesas. Ten en cuenta la fecha, hora, numero de mesa y estado de cada reserva. No modifica datos ni revela informacion personal de otros clientes.",
+        "toolDescription": "Usala SIEMPRE antes de ofrecer una mesa, junto con Consultar_Mesas. Exige el parametro fecha en formato YYYY-MM-DD (convierte hoy, manana o el proximo viernes con la fecha actual). Devuelve las reservas de ese dia; cada reserva bloquea su mesa 2 horas desde su hora y las canceladas no bloquean. Solo lectura. Prohibido: revelar nombre, correo o cualquier dato de otros clientes, y usarla para registrar, modificar o cancelar reservas.",
         "documentId": {
           "__rl": true,
           "value": "1TNEo2jKSvaw0eEk-sLCAgEiq1dNfHCe-S7pgtQDCez8",
@@ -187,7 +189,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const respuesta = $input.first().json.output;\nconst sessionId = $('Webhook').first().json.body.sessionId;\n\ntry {\n  const datos = typeof respuesta === 'string'\n    ? JSON.parse(\n        respuesta.trim()\n          .replace(/^```(?:json)?\\s*/i, '')\n          .replace(/\\s*```$/, '')\n      )\n    : respuesta;\n\n  const p = datos.propuesta;\n\n  if (typeof datos.mensaje !== 'string') {\n    throw new Error('Respuesta invalida');\n  }\n\n  const completa = p &&\n    typeof sessionId === 'string' &&\n    sessionId.trim() &&\n    typeof p.nombre === 'string' &&\n    p.nombre.trim() &&\n    typeof p.correo === 'string' &&\n    /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(p.correo) &&\n    Number.isInteger(p.personas) &&\n    p.personas > 0 &&\n    /^\\d{4}-\\d{2}-\\d{2}$/.test(p.fecha) &&\n    /^\\d{2}:\\d{2}$/.test(p.hora) &&\n    Number.isInteger(p.numero_mesa) &&\n    p.numero_mesa >= 1 &&\n    p.numero_mesa <= 5;\n\n  const propuesta = completa ? {\n    nombre: p.nombre,\n    correo: p.correo,\n    personas: p.personas,\n    fecha: p.fecha,\n    hora: p.hora,\n    numero_mesa: p.numero_mesa\n  } : null;\n\n  const token = completa ? JSON.stringify({\n    proposal_id: 'PROP-' + $execution.id,\n    sessionId: sessionId,\n    expira_en: Date.now() + 15 * 60 * 1000,\n    propuesta: propuesta\n  }) : null;\n\n  return [{\n    json: {\n      output: p && !completa\n        ? 'No pude preparar la propuesta correctamente.'\n        : datos.mensaje,\n      propuesta: propuesta,\n      \n    }\n  }];\n\n} catch (error) {\n  return [{\n    json: {\n      output: 'No pude preparar la respuesta.',\n      propuesta: null,\n      token_propuesta: null\n    }\n  }];\n}"
+        "jsCode": "// Convierte la respuesta del agente al contrato de salida:\n//   { output: string, propuesta: object|null, evidencia: array }\n// - propuesta: datos listos para que la UI pida confirmacion explicita.\n// - evidencia: llamadas a herramientas (grounding) SIN datos personales.\n\nconst entrada = $input.first().json;\nconst sessionId = $('Webhook').first().json.body.sessionId;\n\n// ---------- Evidencia del grounding ----------\n// Solo columnas sin datos personales: nunca nombre, correo ni session_id\n// de otros clientes.\nconst COLUMNAS_PUBLICAS = ['numero_mesa', 'capacidad', 'estado_mesa', 'fecha', 'hora', 'estado'];\n\nfunction sanear(observacion) {\n  let datos = observacion;\n  if (typeof datos === 'string') {\n    try {\n      datos = JSON.parse(datos);\n    } catch (e) {\n      return [];\n    }\n  }\n  const filas = Array.isArray(datos) ? datos : [datos];\n  return filas\n    .filter(f => f && typeof f === 'object')\n    .map(f => {\n      const limpia = {};\n      for (const c of COLUMNAS_PUBLICAS) {\n        if (c in f) limpia[c] = f[c];\n      }\n      return limpia;\n    });\n}\n\nlet evidencia = [];\ntry {\n  const pasos = Array.isArray(entrada.intermediateSteps) ? entrada.intermediateSteps : [];\n  evidencia = pasos.map(paso => {\n    const accion = (paso && paso.action) || {};\n    const entradaHerramienta = accion.toolInput && typeof accion.toolInput === 'object'\n      ? { fecha: accion.toolInput.fecha }\n      : null;\n    return {\n      herramienta: accion.tool || null,\n      entrada: entradaHerramienta && entradaHerramienta.fecha ? entradaHerramienta : null,\n      resultado: sanear(paso && paso.observation)\n    };\n  });\n} catch (e) {\n  evidencia = [];\n}\n\n// ---------- Mensaje y propuesta ----------\ntry {\n  const respuesta = entrada.output;\n  const datos = typeof respuesta === 'string'\n    ? JSON.parse(\n        respuesta.trim()\n          .replace(/^```(?:json)?\\s*/i, '')\n          .replace(/\\s*```$/, '')\n      )\n    : respuesta;\n\n  if (!datos || typeof datos.mensaje !== 'string') {\n    throw new Error('Respuesta invalida');\n  }\n\n  const p = datos.propuesta;\n\n  const completa = Boolean(\n    p &&\n    typeof sessionId === 'string' && sessionId.trim() &&\n    typeof p.nombre === 'string' && p.nombre.trim() &&\n    typeof p.correo === 'string' && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(p.correo) &&\n    Number.isInteger(p.personas) && p.personas > 0 &&\n    typeof p.fecha === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(p.fecha) &&\n    typeof p.hora === 'string' && /^([01]\\d|2[0-3]):[0-5]\\d$/.test(p.hora) &&\n    Number.isInteger(p.numero_mesa) && p.numero_mesa >= 1 && p.numero_mesa <= 5\n  );\n\n  const propuesta = completa ? {\n    nombre: p.nombre.trim(),\n    correo: p.correo.trim(),\n    personas: p.personas,\n    fecha: p.fecha,\n    hora: p.hora,\n    numero_mesa: p.numero_mesa\n  } : null;\n\n  return [{\n    json: {\n      output: p && !completa\n        ? 'No pude preparar la propuesta correctamente. Revisemos los datos de nuevo.'\n        : datos.mensaje,\n      propuesta: propuesta,\n      evidencia: evidencia\n    }\n  }];\n} catch (error) {\n  // Si el modelo respondio en texto normal (no JSON), se muestra ese texto\n  // sin propuesta: nunca se puede confirmar algo que no se valido arriba.\n  const texto = typeof entrada.output === 'string' ? entrada.output.trim() : '';\n  return [{\n    json: {\n      output: texto || 'No pude preparar la respuesta. Intenta de nuevo, por favor.',\n      propuesta: null,\n      evidencia: evidencia\n    }\n  }];\n}\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -579,10 +581,16 @@
         "assignments": {
           "assignments": [
             {
-              "id": "fc321c6b-0162-4abd-bd16-64bcd9b5ac79",
+              "id": "cf0cec0b-08fb-45bd-83be-aa6de649f936",
               "name": "output",
-              "value": "={{\n'Tu reserva ha sido confirmada correctamente.\\n\\n' +\n'Codigo: ' + $('Comprobar_Disponibilidad').first().json.codigo + '\\n' +\n'Fecha: ' + $('Comprobar_Disponibilidad').first().json.fecha + '\\n' +\n'Hora: ' + $('Comprobar_Disponibilidad').first().json.hora + '\\n' +\n'Mesa: ' + $('Comprobar_Disponibilidad').first().json.numero_mesa + '\\n' +\n'Personas: ' + $('Comprobar_Disponibilidad').first().json.personas + '\\n\\n' +\n'Hemos enviado el comprobante y la invitacion de Google Calendar a tu correo electronico.'\n}}",
+              "value": "={{\n'Tu reserva ha sido confirmada correctamente.\\n\\n' +\n'Codigo: ' + $('Comprobar_Disponibilidad').first().json.codigo + '\\n' +\n'Fecha: ' + $('Comprobar_Disponibilidad').first().json.fecha + '\\n' +\n'Hora: ' + $('Comprobar_Disponibilidad').first().json.hora + '\\n' +\n'Mesa: ' + $('Comprobar_Disponibilidad').first().json.numero_mesa + '\\n' +\n'Personas: ' + $('Comprobar_Disponibilidad').first().json.personas + '\\n\\n' +\n($('Crear_Evento').first().json.id ? 'Creamos el evento en Google Calendar' : 'No se pudo crear el evento en Google Calendar') +\n($('Enviar_Correo').first().json.id ? ' y te enviamos la confirmacion a tu correo.' : ' y no se pudo enviar el correo; guarda tu codigo de reserva.')\n}}",
               "type": "string"
+            },
+            {
+              "id": "0800fbb4-884d-40b4-bb3d-b27e43351bb6",
+              "name": "reserva",
+              "value": "={{ {\n  codigo: $('Comprobar_Disponibilidad').first().json.codigo,\n  nombre: $('Comprobar_Disponibilidad').first().json.nombre,\n  correo: $('Comprobar_Disponibilidad').first().json.correo,\n  personas: $('Comprobar_Disponibilidad').first().json.personas,\n  fecha: $('Comprobar_Disponibilidad').first().json.fecha,\n  hora: $('Comprobar_Disponibilidad').first().json.hora,\n  numero_mesa: $('Comprobar_Disponibilidad').first().json.numero_mesa,\n  estado: 'Confirmada',\n  calendar_event_id: $('Crear_Evento').first().json.id || null,\n  estado_calendar: $('Crear_Evento').first().json.id ? 'Creado' : 'Error',\n  estado_correo: $('Enviar_Correo').first().json.id ? 'Enviado' : 'Error'\n} }}",
+              "type": "object"
             }
           ]
         },
@@ -591,7 +599,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        1984,
+        2208,
         -208
       ],
       "id": "552c5bb1-ae27-4169-9dde-8e67e0a3f77e",
@@ -619,15 +627,15 @@
           "id": "rnY64DTckO4VYOX9",
           "name": "Gmail account"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "jpaezga@unal.edu.co",
-          "mode": "list",
-          "cachedResultName": "jpaezga@unal.edu.co"
+          "value": "={{ $env.RESERVAS_CALENDAR_ID }}",
+          "mode": "id"
         },
         "start": "={{ $('Comprobar_Disponibilidad').first().json.fecha + 'T' + $('Comprobar_Disponibilidad').first().json.hora + ':00-05:00' }}",
         "end": "={{ DateTime.fromISO($('Comprobar_Disponibilidad').first().json.fecha + 'T' + $('Comprobar_Disponibilidad').first().json.hora, {zone: 'America/Bogota'}).plus({hours: 2}).toISO() }}",
@@ -652,6 +660,174 @@
         "googleCalendarOAuth2Api": {
           "id": "A9A0w9F4OMyCczLu",
           "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1TNEo2jKSvaw0eEk-sLCAgEiq1dNfHCe-S7pgtQDCez8",
+          "mode": "list",
+          "cachedResultName": "Reservas_Restaurante_Plantilla_Automatizacion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TNEo2jKSvaw0eEk-sLCAgEiq1dNfHCe-S7pgtQDCez8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1838466325,
+          "mode": "list",
+          "cachedResultName": "Reservas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1TNEo2jKSvaw0eEk-sLCAgEiq1dNfHCe-S7pgtQDCez8/edit#gid=1838466325"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "codigo": "={{ $('Comprobar_Disponibilidad').first().json.codigo }}",
+            "calendar_event_id": "={{ $('Crear_Evento').first().json.id || '' }}",
+            "estado_calendar": "={{ $('Crear_Evento').first().json.id ? 'Creado' : 'Error' }}",
+            "estado_correo": "={{ $('Enviar_Correo').first().json.id ? 'Enviado' : 'Error' }}"
+          },
+          "matchingColumns": [
+            "codigo"
+          ],
+          "schema": [
+            {
+              "id": "codigo",
+              "displayName": "codigo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "personas",
+              "displayName": "personas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "numero_mesa",
+              "displayName": "numero_mesa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "calendar_event_id",
+              "displayName": "calendar_event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado_calendar",
+              "displayName": "estado_calendar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado_correo",
+              "displayName": "estado_correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1984,
+        -208
+      ],
+      "id": "b345ad51-ba6c-41c6-bd30-b751584e6245",
+      "name": "Actualizar_Reserva",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SDvx0WLNkrVbQc34",
+          "name": "Google Sheets account"
         }
       }
     }
@@ -740,11 +916,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Estructurar_Propuesta": {
-      "main": [
-        []
       ]
     },
     "Validar_Datos_Reserva": {
@@ -842,7 +1013,7 @@
       "main": [
         [
           {
-            "node": "Respuesta_Final",
+            "node": "Actualizar_Reserva",
             "type": "main",
             "index": 0
           }
@@ -854,6 +1025,17 @@
         [
           {
             "node": "Enviar_Correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar_Reserva": {
+      "main": [
+        [
+          {
+            "node": "Respuesta_Final",
             "type": "main",
             "index": 0
           }

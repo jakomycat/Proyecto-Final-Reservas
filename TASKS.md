@@ -15,14 +15,16 @@ Etapas: 1 Preparación · 2 Desarrollo inicial · 3 Desarrollo central · 4 Inte
       Evidencia: `bash scripts/verificar_entorno.sh > evidencias/I1-T3_verificar_entorno.txt 2>&1` (todo PASA salvo app.py).
 - [ ] **I1-T4 Cero secretos** (etapa 2). `app/.env.example`, `.gitignore`, CI `revisar-secretos.yml`.
       Evidencia: `bash scripts/revisar_secretos.sh` → OK, y check verde en GitHub Actions.
-- [ ] **I1-T5 Google Cloud y calendario** (etapa 3). APIs Sheets/Drive/Calendar, OAuth (Externo + usuarios de prueba),
-      calendario "Reservas Restaurante" compartido. Evidencia: capturas `I1-T5_*.png` sin claves visibles.
+- [ ] **I1-T5 Google Cloud y calendario** (etapa 3). APIs Sheets/Drive/Calendar/**Gmail**, OAuth (Externo + usuarios de prueba),
+      calendario "Reservas Restaurante" compartido, `RESERVAS_CALENDAR_ID` como secreto de Codespaces, hoja compartida con la
+      cuenta de n8n. Evidencia: capturas `I1-T5_*.png` sin claves visibles.
 - [ ] **I1-T6 Pruebas de humo Calendar y Sheets** (etapa 3). Credenciales conectadas en n8n; evento de prueba a la hora correcta.
       Evidencia: `I1-T6_evento_prueba.png`, `I1-T6_lectura_sheets.png`.
-- [ ] **I1-T7 Integración** (etapa 4). `workflow.json` importado y publicado en el n8n de la demo; `app/` del Integrante 3 en el repo.
+- [ ] **I1-T7 Integración** (etapa 4). `workflow.json` con correcciones de integración (contrato v2, `event_id` a Sheets,
+      calendario por variable, modelo `:free`, evidencia saneada) importado y publicado; simulado desactivado; `app/` del Integrante 3 en el repo.
       Evidencia: `python scripts/probar_contrato.py --guardar evidencias/I1-T7_contrato.json` y `python -m py_compile app/app.py`.
-- [ ] **I1-T8 Prueba punta a punta** (etapa 5). Memoria, consulta, escritura sin y con confirmación, sin duplicados, PDF.
-      Evidencia: `python scripts/probar_contrato.py --memoria --guardar evidencias/I1-T8_memoria.json` + capturas `I1-T8_*.png`.
+- [ ] **I1-T8 Prueba punta a punta** (etapa 5). Memoria, consulta, propuesta, escritura sin y con confirmación, sin duplicados, PDF.
+      Evidencia: los 4 pasos de `n8n/README.md#prueba-punta-a-punta` + `--memoria` en `evidencias/I1-T8_*.json` + capturas de hoja, calendario y correo.
 - [ ] **I1-T9 Repo final** (etapa 6). Estructura completa, `workflow.json` final sin pinned data, README, etiqueta `v1.0`.
       Evidencia: `bash scripts/verificar_entorno.sh` todo PASA, `git status` limpio.
 
